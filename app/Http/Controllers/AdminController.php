@@ -14,6 +14,7 @@ class AdminController extends Controller
         $data=category::all() ;
         return view('admin.category',compact('data'));
     }
+
     public function add_category(Request $request){
 
         $data= new category;
@@ -21,11 +22,13 @@ class AdminController extends Controller
         $data->save();
         return redirect()->back()->with('message','Category Added Successfully');
     }
+
     public function delete_category($id){
         $data=category::find($id);
         $data->delete();
         return redirect()->back()->with('message','Category Delete Successfully');
     }
+
     public function view_product(){
         $category=category::all();
         return view('admin.product', compact('category'));
@@ -46,22 +49,24 @@ class AdminController extends Controller
         $product-> save();
         return redirect()->back()->with('message','Product added Successfully');
     }
+
     public function show_product(){
         $product=product::all();
         return view('admin.show_product',compact('product'));
     }
+
     public function delete_product($id){
         $product= product::find($id);
         $product->delete();
         return redirect()->back()->with('message','Product Delete Successfully');
     }
+
     public function update_product($id){
         $product= product::find($id);
         $category= category::all();
         return view('admin.update_product',compact('product','category'));
     }
 
-    
     public function update_product_confirm(Request $request, $id){
         $product=product::find($id);
         $product->title=$request->title;
@@ -71,26 +76,29 @@ class AdminController extends Controller
         $product-> discount_price=$request->dis_price;
         $product-> category=$request->category;
         $image=$request->image;
-        if($image){
+        if($image)
+        {
             $imagename =time().'.'.$image-> getClientOriginalExtension();
-        $request->image->move('product',$imagename);
-        $product->image=$imagename;
+            $request->image->move('product',$imagename);
+            $product->image=$imagename;
         }
-        
         $product->save();
         return redirect()->back()->with('message','Product Updated Successfully');
     }
+
     public function order(){
         $order=Order::all();
 
         return view('admin.order',compact('order'));
     }
+
     public function delivered($id){
         $order=order::find($id);
         $order->delivery_status="delivered";
         $order->save();
         return redirect()-> back();
     }
+    
     public function searchdata(Request $request){
         $searchText=$request->search;
         $order=order::where('name','LIKE',"%$searchText%")->orWhere('phone','LIKE',"%$searchText%")->orWhere('product_title','LIKE',"%$searchText%")->get();

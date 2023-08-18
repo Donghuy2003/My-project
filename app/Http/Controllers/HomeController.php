@@ -10,12 +10,22 @@ use App\Models\Order;
 
 class HomeController extends Controller
 {
-    //
+    //The "index" method gets a list of products, 3 products per page. 
+    // The product data is passed to the view for display on the home page.
+    // The above code does the fetching and displaying the paginated product list on the homepage.
     public function index(){
         $product=Product::paginate(3);
         return view('home.homepage', compact('product'));
     }
-
+// Get current user data and check their role (user type)
+// If the role is '1' (an admin), do the following to display the admin page:
+// Get total products, total orders, and total users:
+// Get all orders and calculate the total revenue from orders:
+// Get the total number of orders shipped and in progress:
+// Returns the view 'admin. home' with the variables passed to display information on the admin interface:
+// If the role is not '1' i.e. the user is not admin, get the pagination list of products (3 products per page) and return the view 'home. homepage'
+// In a nutshell, this code defines how to navigate users to the respective pages based on their role. If the user is an admin, they will see an admin page with infor-mation about products, orders, users, and revenue. 
+// Otherwise, other users will see the main page with a paginated list of products.
     public function redirect(){
 
         $usertype= Auth::user()->usertype;
@@ -45,6 +55,7 @@ class HomeController extends Controller
         return view('home.product_details',compact('product'));
     }
 
+    // 
     public function add_cart(Request $request,$id){
         if(Auth::id()){
             $user=Auth::user();
@@ -82,8 +93,7 @@ class HomeController extends Controller
         }
         else{
             return redirect('login');
-        }
-      
+        } 
     }
 
     public function remove_cart($id){
@@ -92,7 +102,13 @@ class HomeController extends Controller
         return redirect()->back();
 
     }
-
+    // public function cash_order(): This method is used to process the order and cre-ate an order for each product in the user's cart:
+    //     Get logged-in user information:
+    //     Get all products in the user's cart based on user_id:
+    //     Browse through each product in the cart and create an order object to store or-der information:
+    //     Redirect the user back to the previous page (usually the cart page) and display a message about the successful order:
+    //     In a nutshell, this code does the creation of an order from the products in the user's cart and uses the "cash on delivery" payment method. After a successful order is placed, it removes the ordered products from the cart and notifies the user of the suc-cessful order.
+        
     public function cash_order(){
         $user=Auth::user();
         $userid=$user->id;
